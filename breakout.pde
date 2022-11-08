@@ -2,7 +2,6 @@ int[] bloco = new int[20];
 
 // Bola
 int x = 250 + int(random(-50, 50)), y = 350;
-;
 int xVel = 3, yVel = -3;
 
 // Jogador
@@ -19,7 +18,7 @@ void setup() {
 
   // Setando todos os blocos como existentes.
   for (int i = 0; i < 20; i++) {
-    bloco[i] = 1;
+    bloco[i] = 2;
   }
 }
 
@@ -31,7 +30,7 @@ void draw() {
   background(0);
   fill(255);
 
-  // Mudança de posição da bolinha
+  // Movimentação da bola
   x = x + xVel;
   y = y + yVel;
 
@@ -46,7 +45,7 @@ void draw() {
   // Função de inputs do jogador
   jogador();
 
-  // Colisão da bola com o jogador
+  // Mudança de direção da bola ao colidir com o jogador
   if ((xJogador - metadeJogador) < x && (xJogador + metadeJogador) > x &&
     (yJogador - 10) < y && (yJogador) > y) {
     yVel = -yVel;
@@ -79,8 +78,12 @@ void draw() {
 
     // Criação / verificação de existência de blocos restantes
 
-    if (bloco[i] == 1) {
+    if (bloco[i] == 2) {
       fill(i * 10 % 360, 50, 100);
+      rect(xBarras + 40, yBarras + 10, 100, 20);
+      restamBlocos = true;
+    } else if (bloco[i] == 1) {
+      fill(i * 10 % 360, 30, 70);
       rect(xBarras + 40, yBarras + 10, 100, 20);
       restamBlocos = true;
     }
@@ -88,23 +91,42 @@ void draw() {
     // Verifica colisão superior e inferior. Se positivo, seta o bloco como 0 (inexistente)
 
     if (x > (xBarras + 4) && x < (xBarras + 76) &&
+      y > yBarras && y < (yBarras + 20) && bloco[i] == 2) {
+      bloco[i] = bloco[1] - 1;
+      yVel = -yVel;
+      pontos = pontos + 5;
+    } else if (x > (xBarras + 4) && x < (xBarras + 76) &&
       y > yBarras && y < (yBarras + 20) && bloco[i] == 1) {
-      bloco[i]=0;
+      bloco[i] = bloco[i] - 1;
       yVel = -yVel;
       pontos = pontos + 5;
     }
 
     // Colisão lateral
     if (((x > (xBarras - 5) && x < xBarras) || (x > (xBarras + 80) && x < (xBarras + 85))) &&
+      y > yBarras && y < (yBarras + 20) && bloco[i] == 2) {
+      bloco[i] = bloco[i] - 1;
+      xVel = -xVel;
+      yVel = -yVel;
+      pontos = pontos + 5;
+    } else if (((x > (xBarras - 5) && x < xBarras) || (x > (xBarras + 80) && x < (xBarras + 85))) &&
       y > yBarras && y < (yBarras + 20) && bloco[i] == 1) {
-      bloco[i]=0;
+      bloco[i] = bloco[i] - 1;
+      xVel = -xVel;
+      yVel = -yVel;
+      pontos = pontos + 5;
+    }
+
+    if (((x > (xBarras - 1) && x < (xBarras + 5)) || (x > (xBarras + 75) && x < (xBarras + 81))) &&
+      y > yBarras && y < (yBarras + 20) && bloco[i] == 2) {
+
+      bloco[i] = bloco[i] - 1;
       xVel = -xVel;
       yVel = -yVel;
       pontos = pontos + 5;
     } else if (((x > (xBarras - 1) && x < (xBarras + 5)) || (x > (xBarras + 75) && x < (xBarras + 81))) &&
-      y > yBarras && y < (yBarras + 20) && bloco[i] == 1) {
-
-      bloco[i]=0;
+      y > yBarras && y < (yBarras + 20) && bloco[i] == 2) {
+      bloco[i] = bloco[i] - 1;
       xVel = -xVel;
       yVel = -yVel;
       pontos = pontos + 5;
@@ -151,7 +173,7 @@ void keyPressed() {
     pontos = 0;
 
     for (int i = 0; i < 20; i++) {
-      bloco[i] = 1;
+      bloco[i] = 2;
     }
   }
 }
